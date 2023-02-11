@@ -129,9 +129,26 @@ class XPlaneMaterial:
                     )
                     xp_file = self.xplaneObject.xplaneBone.xplaneFile
                     if not eff_fn(xp_file):
-                        self.attributes["ATTR_shiny_rat"].setValue(
-                            mat.specular_intensity
-                        )
+
+                        if mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].is_linked:
+
+                            if mat.xplane.draped:
+
+                                self.attributes['ATTR_shiny_rat'].setValue(None)
+
+                            else:
+
+                                self.attributes['ATTR_shiny_rat'].setValue(1)
+
+                        else:
+
+                            if mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value == 1:
+
+                                self.attributes['ATTR_shiny_rat'].setValue(None)
+
+                            else:
+
+                                self.attributes['ATTR_shiny_rat'].setValue(1 - (mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value))
 
                     # blend
                     if xplane_version >= 1000:
